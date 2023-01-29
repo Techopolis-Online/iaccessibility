@@ -7,20 +7,55 @@
 
 import SwiftUI
 
+class LiveButtonState: ObservableObject {
+    @Published var isPlaying = false
+}
+
 struct ContentView: View {
+    @Environment(\.scenePhase) var scenePhase
+    @ObservedObject var liveAudioPlayer: LiveAudioPlayer
+    @ObservedObject var liveButtonState = LiveButtonState()
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        TabView {
+            Group {
+                HomeView(liveButtonState: liveButtonState, liveAudioPlayer: liveAudioPlayer)
+                    .tabItem {
+                        Label("Home", systemImage: "house.fill")
+                    }
+                ReportView(liveButtonState: liveButtonState, liveAudioPlayer: liveAudioPlayer)
+                    .tabItem {
+                        Label("Report", systemImage: "doc.fill")
+                    }
+                iACastView(liveButtonState: liveButtonState, liveAudioPlayer: liveAudioPlayer)
+                    .tabItem {
+                        Label("iACast", systemImage: "play.square.fill")
+                    }
+            }
+            
+            
         }
-        .padding()
+        .accentColor(.blue)
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                if liveAudioPlayer.player?.rate ?? 0 > 0 {
+                    liveButtonState.isPlaying = true
+                } else {
+                    liveButtonState.isPlaying = false
+                }
+            }
+            
+            
+        }
     }
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ContentView()
+        let audioPlayer = LiveAudioPlayer()
+        ContentView(liveAudioPlayer: audioPlayer)
     }
 }
+
