@@ -13,22 +13,50 @@ struct HomeView: View {
     @State private var listenTitle = "Listen"
     @ObservedObject var liveButtonState: LiveButtonState
     @ObservedObject var liveAudioPlayer: LiveAudioPlayer
+    @ObservedObject var selectedContent: SelectedContent
+    @State private var selectedArticle: Article?
     
     var body: some View {
         NavigationStack {
-            List(searchResults) { article in
-                NavigationLink(destination: DetailView(content: article.content)) {
-                    HStack {
+            Group {
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    List(searchResults, id:\.self, selection:$selectedContent.selectedArticle) { article in
+                        NavigationLink(destination: DetailView(selectedContent: selectedContent)) {
+                            HStack {
+                                ImageView(withURL: article.img ?? URL(string: "https://i0.wp.com/iaccessibility.net/wp-content/uploads/2018/06/cropped-cropped-ialogo-512.png?fit=512%2C512&ssl=1")!)
+                                    .frame(width: 76, height: 76)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .frame(width: 76, height: 76)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                Text(article.title)
+                            }
+                        }
+                    }
+                } else if UIDevice.current.userInterfaceIdiom == .pad {
+                    List(searchResults, id:\.self, selection: $selectedContent.selectedArticle) { article in
                         
-                        ImageView(withURL: article.img ?? URL(string: "https://i0.wp.com/iaccessibility.net/wp-content/uploads/2018/06/cropped-cropped-ialogo-512.png?fit=512%2C512&ssl=1")!)
-                            .frame(width: 76, height: 76)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            HStack {
+                                ZStack {
+                                    Color.blue
+                                    Image(systemName: "mic.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .padding()
+                                        .foregroundColor(.white)
+                                    
+                                }
+                                .frame(width: 76, height: 76)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                Text(article.title)
+                            }
                         
-                        Text(article.title)
-                            .font(.headline)
                     }
                 }
             }
+            .navigationTitle("Home")
+            .navigationBarItems(trailing: Button(changeLiveLabel()) {
+                playAudio()
+            })
             .searchable(text: $searchString, placement: .automatic)
             .onAppear {
                 let url = URL(string: "https://iaccessibility.net/feed")
@@ -45,11 +73,12 @@ struct HomeView: View {
                 }
                 task.resume()
             }
-            .navigationTitle("Home")
-            .navigationBarItems(trailing: Button(changeLiveLabel()) {
-                playAudio()
-            })
         }
+        .navigationSplitViewStyle(.prominentDetail)
+        .navigationBarItems(trailing: Button(changeLiveLabel()) {
+            playAudio()
+        })
+        
     }
     func changeLiveLabel() -> String {
         if liveButtonState.isPlaying {
@@ -79,10 +108,10 @@ struct HomeView: View {
     }
 }
 
-struct HomeView_Previews: PreviewProvider {
+/*struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         let livePlayerButton = LiveButtonState()
         let audioPlayer = LiveAudioPlayer()
-        HomeView(liveButtonState: livePlayerButton, liveAudioPlayer: audioPlayer)
+        HomeView(liveButtonState: livePlayerButton, liveAudioPlayer: audioPlayer, selectedContent: SelectedContent)
     }
-}
+}*/

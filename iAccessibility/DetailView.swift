@@ -13,11 +13,11 @@ struct DetailView: View {
     @State var isPoDCAST: Bool = false
     @State var title: String?
     @State var image: URL?
-    
+    @ObservedObject var selectedContent: SelectedContent
     var body: some View {
-        NavigationStack {
-            WebView(contentString: content)
-        }
+        
+        WebView(contentString: selectedContent.selectedArticle?.content ?? "")
+        
         .navigationTitle("iAccessibility")
         
     }
@@ -41,8 +41,8 @@ struct WebView: UIViewRepresentable {
         
     }
 }
-struct DetailView_Previews: PreviewProvider {
+/*struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
         DetailView()
     }
-}
+}*/
