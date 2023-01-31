@@ -108,11 +108,11 @@
 				9DE9AAE42909D879003C988A /* HomeView.swift */,
 				9DE9AAE62909D891003C988A /* ReportView.swift */,
 				9DE9AAE82909D8A2003C988A /* iACastView.swift */,
+				9DE9AAF5290BFDC7003C988A /* DetailView.swift */,
 				9DE9AADA2909D53E003C988A /* Assets.xcassets */,
 				9DE9AADC2909D53E003C988A /* Preview Content */,
 				9DE9AAEC2909E015003C988A /* FeedParser.swift */,
 				9DE9AAEE290A0C71003C988A /* ArticleData.swift */,
-				9DE9AAF5290BFDC7003C988A /* DetailView.swift */,
 				9DEBE613290F794A0050454D /* ImageView.swift */,
 				9DEBE615290F79690050454D /* ImageLoader.swift */,
 			);

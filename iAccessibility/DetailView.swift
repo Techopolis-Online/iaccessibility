@@ -15,10 +15,16 @@ struct DetailView: View {
     @State var image: URL?
     @ObservedObject var selectedContent: SelectedContent
     var body: some View {
+        Group {
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                WebView(contentString: content)
+                    .navigationTitle(title ?? "iAccessibility")
+            } else {
+                WebView(contentString: selectedContent.selectedArticle?.content ?? "testing")
+                    .navigationTitle(selectedContent.selectedArticle?.title ?? "iAccessibility")
+            }
+        }
         
-        WebView(contentString: selectedContent.selectedArticle?.content ?? "")
-        
-        .navigationTitle("iAccessibility")
         
     }
 }
@@ -26,9 +32,10 @@ struct WebView: UIViewRepresentable {
  
     var url: URL?
     var contentString: String?
- 
+    
     func makeUIView(context: Context) -> WKWebView {
-        return WKWebView()
+        let webView = WKWebView()
+        return webView
     }
  
     func updateUIView(_ webView: WKWebView, context: Context) {
